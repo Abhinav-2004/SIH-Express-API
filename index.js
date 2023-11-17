@@ -15,7 +15,7 @@ app.use(express.json());
 const jwtSecretKey = JWT_SECRET;
 app.use(
     cors({
-      origin: ['http://localhost:3000'],
+      origin: ['http://localhost:3000', 'https://sih-react-railways.vercel.app/'],
       methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
       credentials: true,
     })
