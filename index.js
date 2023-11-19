@@ -35,9 +35,8 @@ app.listen(PORT, () => {
     const name = req.body.name;
     const password = req.body.password;
     const email = req.body.email;
-    const stationID=req.body.stationID;
     try {
-      if (email && password && name && stationID) {
+      if (email && password && name) {
         const CredentialsDoc = await RailwaysUserModel.create({
           name:name,
           email:email,
@@ -45,6 +44,9 @@ app.listen(PORT, () => {
         });
         if (CredentialsDoc) {
           return res.status(200).send(CredentialsDoc);
+        }
+        else{
+          return res.status(500).send("Internal Server Error");
         }
       }
       else{
@@ -107,6 +109,9 @@ app.listen(PORT, () => {
         else{
           res.status(500).json(null);
         }
+      }
+      else{
+        res.status(500).send('Missing Credentials')
       }
     } catch {
       console.log(error);
