@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const RailwaysUserModel = require("./Schema/RailwaysUserSchema");
 const SiddingUserModel = require("./Schema/SidingUserSchema");
+const StockModel = require("./Schema/CoalStocks");
 
 const JWT_SECRET = "VeryImportantSecret";
 const PORT=8080;
@@ -134,6 +135,7 @@ app.listen(PORT, () => {
           );
           if (passwordOK) {
             res.status(200).json(CredentialsDoc);
+            //console.log(CredentialsDoc)
           }
           else{
             res.status(500).json('password does not match');
@@ -151,3 +153,39 @@ app.listen(PORT, () => {
       res.status(400).send("Server Error");
     }
   });
+
+  app.post("/update/stocks", async (req, res) => {
+    console.log("received");
+    await mongoose.connect(MONGO_URL);
+    const stocks = (req.body.stocks);
+    const stationID=(req.body.stationID);
+    //console.log(stocks);
+    //console.log(stationID);
+    try {
+      if (stocks) {
+        const response = await StockModel.updateOne({
+          stationID:stationID,
+        },
+          {
+            $set: {
+              stationID:stationID,
+              stocks:stocks,
+            },
+        }) 
+        if (response) {
+          //console.log(response)
+          res.status(200).send(response);
+        }
+        else{
+          res.status(500).json("Invalid Station ID");
+        }
+      }
+      else{
+        res.status(500).send("Missing details")
+      }
+    } catch(err) {
+      console.log(err);
+      res.status(400).send("Server Error");
+    }
+  });
+
