@@ -35,8 +35,9 @@ app.listen(PORT, () => {
     const name = req.body.name;
     const password = req.body.password;
     const email = req.body.email;
+    const stationID=req.body.stationID;
     try {
-      if (email && password && name) {
+      if (email && password && name && stationID) {
         const CredentialsDoc = await RailwaysUserModel.create({
           name:name,
           email:email,
@@ -45,6 +46,9 @@ app.listen(PORT, () => {
         if (CredentialsDoc) {
           return res.status(200).send(CredentialsDoc);
         }
+      }
+      else{
+        res.status(400).send('error missing data')
       }
     } catch (err) {
       console.log(err);
@@ -69,6 +73,9 @@ app.listen(PORT, () => {
         if (CredentialsDoc) {
           return res.status(200).send(CredentialsDoc);
         }
+      }
+      else{
+        res.status(400).send('error missing data')
       }
     } catch (err) {
       console.log(err);
@@ -113,7 +120,7 @@ app.listen(PORT, () => {
     const password = req.body.password;
     try {
       if (email && password) {
-        const CredentialsDoc = await RailwaysUserModel.findOne({ email });
+        const CredentialsDoc = await SiddingUserModel.findOne({ email });
         //console.log(`email found - ${email}`);
         if (CredentialsDoc) {
           const passwordOK = await bcrypt.compare(
@@ -130,6 +137,9 @@ app.listen(PORT, () => {
         else{
           res.status(500).json(null);
         }
+      }
+      else{
+        res.status(500).send("Missing details")
       }
     } catch {
       console.log(error);
